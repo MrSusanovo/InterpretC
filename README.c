@@ -8,6 +8,16 @@ struct cmdSet{
   int pointer;
 };
 
+struct vars *{
+  void * value;
+  struct vars *next;
+}
+
+struct expr{
+  void *function;
+  struct vars *variable;
+};
+
 char *read_string(){
   int size=4;
   int cur=0;
@@ -36,3 +46,4 @@ struct cmdSet *make_cmd(char *strings){
   ret->pointer=0;
 }
 
+//
