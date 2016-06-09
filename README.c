@@ -3,47 +3,47 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct cmdSet{
-  char *str;
-  int pointer;
+
+
+struct matrix_row{
+  char * row;
+  int row_num;
 };
 
-struct vars *{
-  void * value;
-  struct vars *next;
-}
+struct matrix_row * new_row(){
+  struct matrix_row * new_matrix = malloc(sizeof(struct matrix_row));
+  new_matrix->row_num = 1;
+  char * r = malloc(sizeof(char));
+  new_matrix -> row = r;
+  return new_matrix;
+}//O(1)
 
-struct expr{
-  void *function;
-  struct vars *variable;
-};
+void set_row_num(struct matrix_row *m,int r){
+  m->row_num = r;
+  m->row = realloc(matrix_row->row,sizeof(char)*(r+1));
+}//O(1)
 
-char *read_string(){
-  int size=4;
-  int cur=0;
-  char *store=malloc((size+1)*sizeof(char));
-  while(1){
-    char ch=getchar();
-    if(ch==EOF){
-      *(store+cur)='\0';
-      break;
-    }
-    if(cur==size-1){
-      size*=2;
-      store=realloc(store,(size+1)*sizeof(char));
-    }
-    *(store+cur)=ch;
-    cur+=1;
+void row_cp_from_str(struct matrix_row *m,char *s){
+  int len = m->row_num;
+  *((m->row)+len)='\0';
+  for(int i=len; i<len; i++){
+    *((m->row)+i)=*(s+i);
   }
-  int len=strlen(store);
-  store=realloc(store,(len+1)*sizeof(char));
-  return store;
 }
 
-struct cmdSet *make_cmd(char *strings){
-  struct cmdSet *ret=malloc(sizeof(struct cmdSet));
-  ret->str=strings;
-  ret->pointer=0;
+void set_row_elem(struct matrix_row *m,int pos,char s){
+  *((m->row)+pos)=s;
 }
 
+void delete_matrix_row(sturct matrix_row *m){
+  free(m->row);
+  free(m);
+}
+
+
+struct matrix_col{
+  struct matrix **row;
+  int row_num;
+  int col_num;
+};
 //
