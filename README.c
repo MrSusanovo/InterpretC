@@ -46,4 +46,21 @@ struct matrix_col{
   int row_num;
   int col_num;
 };
+
+struct matrix_col *new_matrix(){
+  struct matrix_col *m=malloc(sizeof(matrix_col));
+  struct matrix ** r = malloc(sizeof(matrix *));
+  m->row = r;
+  m->row_num=1;
+  m->col_num=1;
+  return m;
+}
+
+struct matrix_col *make_matrix(struct matrix_row ** rows, int len){
+  struct matrix_col *m = malloc(sizeof(matrix_col));
+  m->row = rows;
+  m->col_num = len;
+  m->row_num = (*rows)->row_num;
+  return m;
+}
 //
