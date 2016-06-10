@@ -14,7 +14,7 @@ struct matrix_row{
 //a matrix formed by rows
 struct matrix{
   struct matrix_row **row;
-  int size;
+  int size;// how much memories there actually is for matrix_row s
   int row_len;
   int row_count;
 };
@@ -32,7 +32,7 @@ struct matrix_row * new_row(){
 
 //set the length of a row
 void set_row_len(struct matrix_row *m,int r){
-  m->row_len = r;
+  m->size = r+1;
   m->row = realloc(matrix_row->row,sizeof(char)*(r+1));
 }//O(1)
 
@@ -46,8 +46,10 @@ void row_cp_from_str(struct matrix_row *m,char *s){
 }
 
 //set the pos elem in m to be s
-void set_row_elem(struct matrix_row *m,int pos,char s){
+int set_row_elem(struct matrix_row *m,int pos,char s){
+  if(pos >= m->row_len) return -1;
   *((m->row)+pos)=s;
+  return pos;
 }
 
 //delete a row
@@ -74,13 +76,16 @@ struct matrix *make_matrix_from_array(struct matrix_row ** rows, int len){
   m->row = rows;
   m->row_count = len;
   m->row_len = (*rows)->row_len;
+  m->size = len;
   return m;
 }
 
 //add a row to a matrix
 int add_row(struct matrix *m, struct matrix_row * r){
   int len = r->row_len;
+  // if the size of row does not match the other rows in the matrix
   if(len != m->row_len) return -1;
+  //if the row array is full,resize the row array
   if(m->size == m->row_count){
     int s = m->size;
     s*=2;
@@ -90,5 +95,27 @@ int add_row(struct matrix *m, struct matrix_row * r){
   *((m->row) + (m->row_count)) = r;
   int ret = m->row_count;
   m->row_count +=1;
+  return ret;
+}
+
+int add_col(struct matrix *m, char *col, int len){
+  //first check if the size of column matches row_count
+  if(len != m->row_count) return -1;
+  //if the rows are filled. resize all of the row
+  if(m->row_len == (*(m->row))->size)){
+    size *= 2;
+    for(int i = 0;i < (m->row_count); i++){
+      (*((m->row)+i))->size = size;
+      (*((m->row)+i))->row = realloc(*((m->row)+i),(size+1)*sizeof(char));
+    }
+  }
+  // copying the actual data
+  int rowlen = m->row_len;
+  for(int i = 0;i < (m->row_count); i++){
+    *((*((m->row)+i))->row) + i) = *(col+i);
+    (*((m->row)+i))->row_len += 1;
+  }
+  int ret = m->row_len;
+  m->row_len += 1;
   return ret;
 }
